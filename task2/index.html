@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script defer src="./task2.js"></script>
+    <title>Task 2</title>
+  </head>
+  <body>
+    <button class="btn">Button</button>
+  </body>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      margin-top: 30vh;
+    }
+    .btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 24px;
+      padding: 50px;
+      background-color: inherit;
+      border-color: black;
+      border-radius: 20%;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      transform: scale(0.98);
+      box-shadow: inset 0 0 6px 4px silver;
+    }
+    .btn:active {
+      box-shadow: inset 0 0 14px 4px silver;
+      transform: scale(0.95);
+    }
+  </style>
+</html>
