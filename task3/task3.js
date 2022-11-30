@@ -23,7 +23,9 @@ input.oninput = () => {
 // пользователя, также он добавляется в html,
 // принемается ответ сервера и добавляется в html,
 // очищается input
-btn.addEventListener('click', function (e) {
+btn.addEventListener('click', sendMessage)
+
+function sendMessage(e) {
   e.preventDefault();
   websocket.send(input.value);
   addMessage(input.value, 'sender');
@@ -32,14 +34,27 @@ btn.addEventListener('click', function (e) {
   };
   input.value = '';
   btn.setAttribute('disabled', '');
-});
+}
 
 // Создаём функцию вставки переданных данных в
 // соответствующий тег html, приемающий содержание
 // и название класса css, отражающий тип сообщения
 function addMessage(message, type) {
   chat.innerHTML += `
-  <p class="messange ${type}">${message}</p>
+  <p class="message ${type}">${message}</p>
+  `;
+  // chat.scrollBy({
+  //   top: 100,
+  //   left: 0,
+  //   behavior: 'smooth'
+  // });
+  let lastMessage = document.querySelector(".message:last-child")
+  lastMessage.scrollIntoView({behavior: "smooth", block: "center", inline: "end"})
+}
+
+function addStatus(text) {
+  chat.innerHTML = `
+  <p class="message status">${text}</p>
   `;
 }
 
@@ -48,24 +63,22 @@ function addMessage(message, type) {
 // формирование ссылки на часть карты, соответствующий
 // переданным ранее координатам, готовая ссылка передаётся
 // в функцию добавления сообщения в разметку(addMessage)
-btnGeo.addEventListener('click', (e) => {
-  e.preventDefault();
-  getGeoLocation();
-});
+btnGeo.addEventListener('click', getGeoLocation);
 
-function getGeoLocation() {
+function getGeoLocation(e) {
+  e.preventDefault();
   const error = () => {
-    alert('Невозможно получить ваше местоположение');
+    addStatus(`Невозможно получить ваше местоположение`)
+    btnGeo.setAttribute('disabled', '');
   };
   const success = (position) => {
+    btnGeo.removeAttribute('disabled', '');
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    console.log(`${latitude} , ${longitude}`);
     let geoMessage = `<a href="https://www.openstreetmap.org/#map=18/${latitude}/${longitude}" class="link" target="_blank">Гео-локация</a>`;
     websocket.send(geoMessage);
-    addMessage(geoMessage, 'sender');
     websocket.onmessage = function (evt) {
-      addMessage(evt.data, 'recipient');
+      addMessage(evt.data, 'sender');
     };
   };
 
@@ -79,6 +92,7 @@ function getGeoLocation() {
 document.addEventListener('DOMContentLoaded', () => {
   websocket = new WebSocket(wsUrl);
   websocket.onopen = function () {
-    console.log('connected');
+    addStatus(`Соединение установленно`)
+
   };
 });
