@@ -43,11 +43,6 @@ function addMessage(message, type) {
   chat.innerHTML += `
   <p class="message ${type}">${message}</p>
   `;
-  // chat.scrollBy({
-  //   top: 100,
-  //   left: 0,
-  //   behavior: 'smooth'
-  // });
   let lastMessage = document.querySelector(".message:last-child")
   lastMessage.scrollIntoView({behavior: "smooth", block: "center", inline: "end"})
 }
